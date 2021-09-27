@@ -147,4 +147,4 @@ client.setInterval(async () => {
 	if (channel.name != name) channel.setName(name).catch(() => { });
 
 }, 620000);
-client.login('NzQ0ODgzMzA4ODI3MTE1NTcx.XzpspA.hLJoUMv1gvNJHsYyBdDtyvdjYuc');
+client.login('токен');
