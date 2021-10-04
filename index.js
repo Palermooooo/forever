@@ -9,7 +9,7 @@ const { MessageEmbed } = require('discord.js');
 const mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://admin:admin@cluster0-shard-00-00.31qi8.mongodb.net:27017,cluster0-shard-00-01.31qi8.mongodb.net:27017,cluster0-shard-00-02.31qi8.mongodb.net:27017/test?replicaSet=atlas-5mfvjp-shard-0&ssl=true&authSource=admin', {
+mongoose.connect('ссылка', {
 	useNewUrlParser: true,
 	useUnifiedTopology: true,
 	useFindAndModify: false,
@@ -35,72 +35,46 @@ fs.readdir('./handler/', (err, files) => {
 });
 
 client.on("ready", async () => {
+	console.log("[]")
 
 });
 client.setInterval(async () => {
-	const users = await User.find({ muted: true});
-	users.forEach(async g => {
-		let guild = client.guilds.cache.get("797863873633976320");
-		let now = new Date()
-		now.getTime()
-		let time = g.unmute.getTime()
-		if (time <= now) {
-			let user = await User.findOne({ userID: g.userID});
-			user.muted = false;
-			await user.save()
-			let member = guild.members.cache.get(g.userID);
-			let emb = new MessageEmbed()
-			.setAuthor("Напоминание")
-			.setDescription(`Текст: ` + user.text)
-			.setColor("#57f287")
-			.setTimestamp()
-			if (member) member.send(emb);
-		}
-	})
-}, 10000);
-client.setInterval(async () => {
-	const users = await User.find({ muted1: true});
-	users.forEach(async g => {
-		let guild = client.guilds.cache.get("797863873633976320");
-		let now = new Date()
-		now.getTime()
-		let time = g.unmute1.getTime()
-		if (time <= now) {
-			let user = await User.findOne({ userID: g.userID});
-			user.muted1 = false;
-			await user.save()
-			let member = guild.members.cache.get(g.userID);
-			if (member) member.send('Прошло 20 часов! Пора забрать бесплатный пак в национальных героях!');
-		}
-	})
-}, 15000);
-client.setInterval(async () => {
-	const users = await User.find({ muted2: true});
-	users.forEach(async g => {
-		let guild = client.guilds.cache.get("797863873633976320");
-		let now = new Date()
-		now.getTime()
-		let time = g.unmute2.getTime()
-		if (time <= now) {
-			let user = await User.findOne({ userID: g.userID});
-			user.muted2 = false;
-			await user.save()
-			let member = guild.members.cache.get(g.userID);
-			if (member) member.send('Прошло 10 часов! Пора забрать перки в бесплатных паках!');
-		}
-	})
-}, 20000);
-client.on('message', async (message) => {
-if (!message) return;
-let user = await User.findOne({userID:message.author.id}) || new User({userID:message.author.id});
-msg++;
-user.save();
+    const users = await User.find({ muted: true, guild: { $ne: null } });
+    users.forEach(async g => {
+        let guild = client.guilds.cache.get(g.guild)
+        if (!guild) return;
+        let name = guild.name;
+        let role = guild.roles.cache.find(r => r.id == "Muted");
+        if (!role) return;
+        let now = new Date()
+        now.getTime()
+        let time = g.unmute.getTime()
+        if (time <= now) {
+            let user = await User.findOne({ userID: g.userID, guild: g.guild})
+            user.muted = false;
+            await user.save()
+            let member = guild.members.cache.get(g.userID);
+            if (!member) return;
+            if (!member.guild.me.hasPermission("MANAGE_ROLES")) return;
+            member.roles.remove(role.id).catch(() => { });
+            let embs = new MessageEmbed()
+            .setDescription(`Вы были размьючены на сервере **${name}** !`)
+            .setColor(guilds.emb)
+            if (member) member.send(embs).catch(() => { });
+           
+        }
+    })
+}, 60000);
+client.on("message",async (msg) => {
+if (!msg) return;
+if (msg.content == "текст") message.channel.send("что-то"),message.delete();
+if (msg.content == "текст1") message.channel.send("что-то2"),message.delete();
 });
 client.on('message', async (message) => {
 	if (!message.guild) return;
 	if (message.author.bot) return;
 	if (!message.member) return;
-	let prefix = '.';
+	let prefix = '!';
 
 		message.content = message.content.substr(prefix.length);
 		const newStr = message.content.replace(/\s+/g, ' ');
@@ -117,34 +91,4 @@ client.on('message', async (message) => {
 
 	
 });
-client.setInterval(async () => {
-
-		let guild = client.guilds.cache.get('797863873633976320');
-		if (!guild) return;
-		let channel = guild.channels.cache.get('880496320547278858');
-		if (!channel) return;
-	   const name = `Онлайн: ${channel.guild.memberCount - channel.guild.members.cache.filter(m => m.user.presence.status == 'offline').size}`;
-		if (channel.name != name) channel.setName(name).catch(() => { });
-	
-}, 600000);
-client.setInterval(async () => {
-
-	let guild = client.guilds.cache.get('797863873633976320');
-	if (!guild) return;
-	let channel = guild.channels.cache.get('880496429301370971');
-	if (!channel) return;
-   const name = `Участники: ${channel.guild.memberCount}`;
-	if (channel.name != name) channel.setName(name).catch(() => { });
-
-}, 610000);
-client.setInterval(async () => {
-
-	let guild = client.guilds.cache.get('797863873633976320');
-	if (!guild) return;
-	let channel = guild.channels.cache.get('880496300657901608');
-	if (!channel) return;
-   const name = `Бустеров: ${guild.premiumSubscriptionCount || '0'}`;
-	if (channel.name != name) channel.setName(name).catch(() => { });
-
-}, 620000);
-client.login('токен');
+client.login('ODE3NDU1MjExODAzMDUwMDQ0.YEJwfg.C6fx4dPxnRxrkmOP6LWnTM4quuk');
