@@ -8,7 +8,7 @@ const Guild = require('../pref.js');
 
 module.exports.run = async (client, message, args) => {
 	if(message.guild.me.permissions.has("MANAGE_MESSAGES")) message.delete();
-	
+	const guild = await Guild.findOne({ id: message.guild.id }) || new Guild({ id: message.guild.id });
 	if (message.guild.id == '797863873633976320') return;
 	let nemb = new MessageEmbed()
 	.setAuthor('Ошибка ❌')
@@ -29,7 +29,7 @@ module.exports.run = async (client, message, args) => {
 	if(member.permissions.has("MANAGE_MESSAGES")) return  message.reply('**не нужно мутить модератора!**').catch(() => {});
 	
 	
-	const role = message.guild.roles.cache.find(r => r.id == "Muted");
+	const role = message.guild.roles.cache.find(r => r.name == "Muted");
 
 	if(role && member.roles.cache.has(role.id)) return message.channel.send("**❌Ошибка**\nЭтот пользователь уже в муте").catch(() => {});
 	
@@ -64,16 +64,16 @@ let result = Math.floor(toms / 1000);
   user.muted11 = true;
   user.save().catch(() => {});
 	member.roles.add(role.id).catch(() =>{});
-
+let ch = client.channel.cache.get("840059609649905704")
 	const emsb = new MessageEmbed()
 	
 	.setDescription(`**<@${member.id}>** пользователь получил мьют на **${ms(ms(time))}**\n Причина - \`${reason}\` | выдал мут **<@${message.member.id}>**`)
-.setColor("RED")
-	message.channel.send({ embed: emsb }).catch(() => {});
+	.setColor(guild.emb)
+	ch.send({ embed: emsb }).catch(() => {});
 	var embeds = new MessageEmbed()
     .setTitle('Вы были замьючены!')
  
-    .setColor("RED")
+    .setColor(guild.emb)
     .setDescription(`**Причина:** \`${reason}\`\n **Мут выдал:** \`${message.author.tag}\`\n**Длительность мута:** \`${ms(ms(time))}\`\n**Сервер:** ${message.guild.name}`)
          .setTimestamp()
   member.send({embed:embeds}).catch(() =>{})
