@@ -16,7 +16,7 @@ var user = new mongoose.Schema({
   muteinfo2: String,
   time2: String,
   unmute2: Date,
-  msg:{type:Number,default:0},
+  msg:{type:Number,default: 0},
   muted11: Boolean,
   muteinfo11: String,
   time11: String,
