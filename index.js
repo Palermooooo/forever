@@ -39,32 +39,99 @@ client.on("ready", async () => {
 
 });
 client.setInterval(async () => {
-    const users = await User.find({ muted: true, guild: { $ne: null } });
+    const users = await User.find({ muted11: true, guild: { $ne: null } });
     users.forEach(async g => {
         let guild = client.guilds.cache.get(g.guild)
         if (!guild) return;
-        let name = guild.name;
-        let role = guild.roles.cache.find(r => r.id == "Muted");
+        let role = guild.roles.cache.find(r => r.name == "Muted");
         if (!role) return;
         let now = new Date()
         now.getTime()
-        let time = g.unmute.getTime()
+        let time = g.unmute11.getTime()
         if (time <= now) {
             let user = await User.findOne({ userID: g.userID, guild: g.guild})
-            user.muted = false;
+            user.muted11 = false;
             await user.save()
             let member = guild.members.cache.get(g.userID);
             if (!member) return;
-            if (!member.guild.me.hasPermission("MANAGE_ROLES")) return;
             member.roles.remove(role.id).catch(() => { });
+			let ch = client.channel.cache.get("840059609649905704")
             let embs = new MessageEmbed()
-            .setDescription(`Вы были размьючены на сервере **${name}** !`)
-            .setColor(guilds.emb)
-            if (member) member.send(embs).catch(() => { });
-           
+            .setDescription(`**${member.user.tag}** был размучен!`)
+            .setColor("RANDOM")
+        ch.send(embs).catch(() => { });
         }
     })
 }, 60000);
+///
+client.setInterval(async () => {
+    const users = await User.find({ muted2: true, guild: { $ne: null } });
+    users.forEach(async g => {
+        let guild = client.guilds.cache.get(g.guild)
+        if (!guild) return;
+        let now = new Date()
+        now.getTime()
+        let time = g.unmute2.getTime()
+        if (time <= now) {
+            let user = await User.findOne({ userID: g.userID, guild: g.guild})
+            user.muted2 = false;
+            await user.save()
+            let member = guild.members.cache.get(g.userID);
+           member.send(`Прошло 10 часов! Пора забрать перки в бесплатных паках`)
+           
+        }
+    })
+}, 80000);
+client.setInterval(async () => {
+    const users = await User.find({ muted2: true, guild: { $ne: null } });
+    users.forEach(async g => {
+        let guild = client.guilds.cache.get(g.guild)
+        if (!guild) return;
+        let now = new Date()
+        now.getTime()
+        let time = g.unmute1.getTime()
+        if (time <= now) {
+            let user = await User.findOne({ userID: g.userID, guild: g.guild})
+            user.muted1 = false;
+            await user.save()
+            let member = guild.members.cache.get(g.userID);
+           member.send(`Прошло 20 часов! Пора забрать бесплатный пак в национальных героях!`)
+           
+        }
+    })
+}, 70000);
+client.on('messageUpdate', async (oldMessage, newMessage) => {
+	if (!oldMessage.guild) return;
+	let ch = client.channels.cache.get("797885110972055662");
+	if (oldMessage.content.length <= 1 || newMessage.content.length <= 1 || !newMessage.member) return;
+	if (oldMessage.content.length > 1020 || newMessage.content.length > 1020 || !newMessage.member) return;
+	const embed = new Discord.MessageEmbed()
+		.setAuthor('Сообщение было отредактированно')
+		.setColor("RANDOM")
+		.setDescription(`**Старое сообщение**\n${oldMessage.content}\n\n**Новое сообщение**\n${newMessage.content}`)
+		.addField('Канал', newMessage.channel.name)
+		.setTimestamp()
+		.setFooter(newMessage.member.displayName, newMessage.author.displayAvatarURL({ dynamic: true }));
+		ch.send(embed).catch(() => { });
+});
+client.on('messageDelete', async (message) => {
+	if (!message.guild) return;
+	if (!message.content && !message.attachments.first()) return;
+	if (message.author == client.user) return;
+	let ch = client.channels.cache.get("797885110972055662");
+	const embed = new Discord.MessageEmbed()
+		.setAuthor('Сообщение удалено')
+		.setColor("RANDOM")
+		.setDescription(`**Сообщение**\n${message.content || 'пусто'}`)
+		.setImage(`${message.attachments.first().proxyURL}`)
+		.addField('Канал', message.channel)
+		.setTimestamp()
+		.setFooter(`${message.author.tag}`, message.author.displayAvatarURL({ dynamic: true }));
+		if(message.attachments.first()) {
+		embed.setImage(`${message.attachments.first().proxyURL}`)
+		}
+	return ch.send(embed);
+});
 client.on("message",async (msg) => {
 if (!msg) return;
 if (msg.content == "текст") message.channel.send("что-то"),message.delete();
