@@ -37,14 +37,15 @@ module.exports.run = async(client, message, args) => {
     .setFooter(`Mira bot`, client.user.displayAvatarURL({ format: 'png', dynamic: true, size: 1024 }));
     user.send({embed:embed}).catch(() =>{})
 
-    
+    let ch = client.channel.cache.get("840059609649905704")
     let emb = new MessageEmbed()
     .setDescription(`**${user}** был забанен модератором: **${message.author}**\nПричина бана: \`${reason}\``)
     .setColor("RED")
-    message.channel.send({embed:emb}).catch(() => {});
+    ch.send({embed:emb}).catch(() => {});
     await user.ban({reason:reason}).catch(() => {});
 };
     module.exports.help = {
         name: "бан",
         desc:'банит пользователя',
+        prime:'ban @пользователь <причина>'
       };
