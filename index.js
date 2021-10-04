@@ -134,8 +134,8 @@ client.on('messageDelete', async (message) => {
 });
 client.on("message",async (msg) => {
 if (!msg) return;
-if (msg.content == "текст") message.channel.send("что-то"),message.delete();
-if (msg.content == "текст1") message.channel.send("что-то2"),message.delete();
+if (msg.content == "текст") message.channel.send("что-то"),msg.delete();
+if (msg.content == "текст1") message.channel.send("что-то2"),msg.delete();
 });
 client.on('message', async (message) => {
 	if (!message.guild) return;
