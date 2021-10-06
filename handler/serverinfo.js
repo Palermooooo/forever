@@ -3,8 +3,6 @@ const Discord = module.require("discord.js");
 const strftime = require('strftime')
 const moment = require("moment");
 const { stripIndents } = require('common-tags');
-const Guild = require('../pref.js');
-const Prem = require('../prem.js');
 const Cooldowns = new Map();
 var Cooldown = 60000;
 module.exports.run = async (bot,message,args) => {
