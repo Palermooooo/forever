@@ -8,7 +8,9 @@ let n = 0;
    n++;
    text += `**${n}) <@${user.userID}>:${user.msg} сообщений 💬**\n`;
   };
-
+ let top = await User.find({ msg : { $gte: users.msg},
+  }).countDocuments();
+  console.log(top)
   const ihatekids = new Discord.MessageEmbed()
   .setAuthor(`Топ по сообщениям✉️`)
   .setDescription(`${text}`)
