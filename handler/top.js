@@ -8,7 +8,7 @@ let n = 0;
    n++;
    text += `**${n}) <@${user.userID}>:${user.msg} сообщений 💬**\n`;
   };
-  let top = await User.find({guild:message.guild.id, msg : { $gte: user.msg},
+  let top = await User.find({ msg : { $gte: user.msg},
   }).countDocuments();
   const ihatekids = new Discord.MessageEmbed()
   .setAuthor(`Топ по сообщениям✉️`)
