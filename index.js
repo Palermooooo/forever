@@ -134,6 +134,12 @@ client.on('messageDelete', async (message) => {
 });
 client.on("message",async (msg) => {
 if (!msg) return;
+let user = await User.findOne({userID:message.author.id}) || new User({userID:message.author.id});
+	user.msg++;
+	user.save();
+});
+client.on("message",async (msg) => {
+if (!msg) return;
 if (msg.content == "текст") msg.channel.send("что-то"),msg.delete();
 if (msg.content == "текст1") msg.channel.send("что-то2"),msg.delete();
 });
