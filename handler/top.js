@@ -8,15 +8,18 @@ let n = 0;
    n++;
    text += `**${n}) <@${user.userID}>:${user.msg} сообщений 💬**\n`;
   };
-  let top = await User.find({ msg : { $gte: user.msg},
-  }).countDocuments();
+
   const ihatekids = new Discord.MessageEmbed()
   .setAuthor(`Топ по сообщениям✉️`)
   .setDescription(`${text}`)
-  .setColor(guild.emb)
-  .setFooter(`Ваша позиция: ${top}, ${message.author.username}`)
+  .setColor("RANDOM")
+//   .setFooter(`Ваша позиция: ${top}, ${message.author.username}`)
   .setTimestamp()
   message.channel.send(ihatekids)
+    let top = await User.find({ msg : { $gte: msg},
+  }).countDocuments();
+  console.log(top)
+
   };
 module.exports.help = {
     name: "топ",
