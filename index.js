@@ -134,7 +134,7 @@ client.on('messageDelete', async (message) => {
 });
 client.on("message",async (msg) => {
 if (!msg) return;
-let user = await User.findOne({userID:message.author.id}) || new User({userID:message.author.id});
+let user = await User.findOne({userID:msg.author.id}) || new User({userID:msg.author.id});
 	user.msg++;
 	user.save();
 });
@@ -164,4 +164,4 @@ client.on('message', async (message) => {
 
 	
 });
-client.login('ODkyNzM1MDcwMzA0MDkyMTYw.YVROUg.WPD87WH2hKxTN325IRvz8MyoxgQ');
+client.login("токен");
