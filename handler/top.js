@@ -18,8 +18,6 @@ let n = 0;
 //   .setFooter(`Ваша позиция: ${top}, ${message.author.username}`)
   .setTimestamp()
   message.channel.send(ihatekids)
-    let top = await User.find({ msg : { $gte: msg},
-  }).countDocuments();
   console.log(top)
 
   };
